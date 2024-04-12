@@ -1,0 +1,49 @@
+package com.example.azarnumerico
+
+import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.azarnumerico.adapters.UserAdapter
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import openHelper.DatabaseHelper
+
+class UserViewActivity : ComponentActivity() {
+
+    private lateinit var userAdapter: UserAdapter
+    private lateinit var usersView: RecyclerView
+    private val compositeDisposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_user_view)
+
+        usersView = findViewById(R.id.usersView)
+        usersView.layoutManager = LinearLayoutManager(this)
+
+        val dbHelper = DatabaseHelper(this)
+        compositeDisposable.add(
+            dbHelper.getAllUsers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ users ->
+                    userAdapter = UserAdapter(users.toMutableList())
+                    usersView.adapter = userAdapter
+                }, { error ->
+                    Toast.makeText(this, "Error al obtener los usuarios: ${error.message}", Toast.LENGTH_LONG).show()
+                })
+        )
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
+    }
+
+}
