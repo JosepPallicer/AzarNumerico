@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.azarnumerico.adapters.BackgroundMusic
+import com.example.azarnumerico.adapters.SoundManager
 import com.example.azarnumerico.adapters.SoundPreferences
 
 class ConfigActivity : ComponentActivity() {
@@ -22,23 +23,15 @@ class ConfigActivity : ComponentActivity() {
         startService(Intent(this, BackgroundMusic::class.java))
 
         muteButton = findViewById(R.id.muteButton)
-        updateMuteButtonText()
-
         muteButton.setOnClickListener {
-            SoundPreferences.soundEnabled(this)
-            val intent = Intent("MUSIC_STATE_CHANGED")
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-            updateMuteButtonText()
+            SoundManager.changeSound()
         }
 
-    }
+        SoundManager.soundEnabled.observe(this) { isEnabled ->
+            muteButton.text = if (isEnabled) "Mutear app" else "Desmutear"
 
-    private fun updateMuteButtonText() {
-        muteButton.text = if (SoundPreferences.isSoundOn(this)) {
-            "Mutear App"
-        } else {
-            "Desmutear App"
         }
+
     }
 
 }
