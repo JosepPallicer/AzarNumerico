@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import openHelper.DatabaseHelper
 import android.content.Intent
+import com.example.azarnumerico.adapters.BackgroundMusic
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import model.User
 
@@ -23,6 +24,8 @@ class LogInActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_log_in)
+
+        startService(Intent(this, BackgroundMusic::class.java))
 
         dbHelper = DatabaseHelper(this)
 

@@ -1,6 +1,7 @@
 package com.example.azarnumerico
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Button
@@ -8,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import com.example.azarnumerico.adapters.BackgroundMusic
 import openHelper.DatabaseHelper
 
 class SinglePlayer : ComponentActivity() {
@@ -226,8 +228,16 @@ class SinglePlayer : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
+        stopService(Intent(this, BackgroundMusic::class.java))
         updateUserInfo()
         checkCoinsState()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (!isFinishing) {
+            startService(Intent(this, BackgroundMusic::class.java))
+        }
     }
 
     @SuppressLint("SetTextI18n")
