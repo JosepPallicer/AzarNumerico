@@ -1,10 +1,12 @@
 package com.example.azarnumerico
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.azarnumerico.adapters.BackgroundMusic
 import com.example.azarnumerico.adapters.ScoreAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -21,6 +23,8 @@ class ScoreActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_score)
+
+        startService(Intent(this, BackgroundMusic::class.java))
 
         databaseHelper = DatabaseHelper(this)
 

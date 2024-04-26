@@ -1,11 +1,13 @@
 package com.example.azarnumerico
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.azarnumerico.adapters.BackgroundMusic
 import com.example.azarnumerico.adapters.UserAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -22,6 +24,8 @@ class UserViewActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_user_view)
+
+        startService(Intent(this, BackgroundMusic::class.java))
 
         usersView = findViewById(R.id.usersView)
         usersView.layoutManager = LinearLayoutManager(this)
