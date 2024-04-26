@@ -32,7 +32,4 @@
     <string name="configuration">CONFIGURACION</string>
     <string name="refund">Deshacer</string>
     <string name="totalBet">Apuesta total</string>
-    <string name="musicButton">Music</string>
-    <string name="muteApp">Mutear App</string>
-    <string name="musicSelect">Seleccionar música</string>
 </resources>

@@ -68,7 +68,6 @@ dependencies {
     implementation (libs.rxjava.v315)
     implementation (libs.rxkotlin)
     implementation (libs.material.v1120)
-    implementation (libs.androidx.localbroadcastmanager)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

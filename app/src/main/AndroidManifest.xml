@@ -13,9 +13,6 @@
         android:theme="@style/Theme.AzarNumerico"
         tools:targetApi="31">
         <activity
-            android:name=".ConfigActivity"
-            android:exported="false" />
-        <activity
             android:name=".ScoreActivity"
             android:exported="false" />
         <activity
@@ -40,7 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.example.azarnumerico.adapters.BackgroundMusic" />
 
         <meta-data
             android:name="preloaded_fonts"

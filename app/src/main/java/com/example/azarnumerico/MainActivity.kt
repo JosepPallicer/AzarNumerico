@@ -1,33 +1,15 @@
 package com.example.azarnumerico
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.annotation.RequiresApi
 import openHelper.DatabaseHelper
-import com.example.azarnumerico.adapters.BackgroundMusic
-import com.example.azarnumerico.adapters.SoundPreferences
 
 class MainActivity : ComponentActivity() {
-
-    private val musicStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (SoundPreferences.isSoundOn(context)) {
-                startService(Intent(context, BackgroundMusic::class.java))
-            } else {
-                stopService(Intent(context, BackgroundMusic::class.java))
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -38,9 +20,6 @@ class MainActivity : ComponentActivity() {
         val buttonLogIn = findViewById<Button>(R.id.logInButton)
         val reBuyButton = findViewById<Button>(R.id.rebuyButton)
         val scoreButton = findViewById<Button>(R.id.scoreButton)
-        val configButton = findViewById<Button>(R.id.configButton)
-
-        startService(Intent(this, BackgroundMusic::class.java))
 
         reBuyButton.isEnabled = false
 
@@ -112,34 +91,12 @@ class MainActivity : ComponentActivity() {
             startActivity(logIn)
         }
 
-        configButton.setOnClickListener {
-
-            val configuration = Intent(this, ConfigActivity::class.java)
-
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(configuration)
-        }
-
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onResume() {
         super.onResume()
-        val filter = IntentFilter("MUSIC_STATE_CHANGED")
-        registerReceiver(musicStateReceiver, filter, RECEIVER_NOT_EXPORTED)
-        if (SoundPreferences.isSoundOn(this)) {
-            startService(Intent(this, BackgroundMusic::class.java))
-        } else {
-            stopService(Intent(this, BackgroundMusic::class.java))
-        }
         updateLoginButton()
         updateUserInfo()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(musicStateReceiver)
     }
 
     private fun updateLoginButton() {
@@ -192,5 +149,4 @@ class MainActivity : ComponentActivity() {
         Toast.makeText(this, "Monedas recompradas con éxito", Toast.LENGTH_SHORT).show()
 
     }
-
 }
