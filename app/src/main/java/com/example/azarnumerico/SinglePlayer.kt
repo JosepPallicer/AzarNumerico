@@ -2,6 +2,7 @@ package com.example.azarnumerico
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Button
@@ -24,6 +25,9 @@ class SinglePlayer : ComponentActivity() {
     private lateinit var betView2: TextView
     private lateinit var betView3: TextView
     private lateinit var betView4: TextView
+    private lateinit var tensionSound: MediaPlayer
+    private lateinit var victorySound: MediaPlayer
+    private lateinit var lossSound: MediaPlayer
 
     private var bet1: Int = 0
     private var bet2: Int = 0
@@ -55,7 +59,8 @@ class SinglePlayer : ComponentActivity() {
         betView3 = findViewById(R.id.bet3)
         betView4 = findViewById(R.id.bet4)
 
-
+        startService(Intent(this, BackgroundMusic::class.java))
+        initializeSounds()
 
         enableBetButtons(false)
         checkCoinsState()
@@ -70,6 +75,12 @@ class SinglePlayer : ComponentActivity() {
             }
         }
     }
+    private fun initializeSounds() {
+        tensionSound = MediaPlayer.create(this, R.raw.tension_apuesta)
+        victorySound = MediaPlayer.create(this, R.raw.victory_sound)
+        lossSound = MediaPlayer.create(this, R.raw.violin_perdida)
+    }
+
 
     private var userCoins: Int = 0
 
@@ -174,6 +185,12 @@ class SinglePlayer : ComponentActivity() {
         startGameButton.text = "STOP"
         timerRunning = true
         enableBetButtons(true)
+        sendMusicControlIntent("PAUSE")
+        tensionSound.start()
+        tensionSound.setOnCompletionListener {
+            sendMusicControlIntent("PLAY")
+        }
+
 
         countDownTimer = object : CountDownTimer(20000, 1000) {
 
@@ -214,6 +231,11 @@ class SinglePlayer : ComponentActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun resetTimer() {
+        if (!tensionSound.isPlaying) {
+            sendMusicControlIntent("PLAY")
+        }
+        tensionSound.pause()
+        tensionSound.seekTo(0)
         startGameButton.text = "START"
         timerRunning = false
         betClock.text = "0"
@@ -228,17 +250,17 @@ class SinglePlayer : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        stopService(Intent(this, BackgroundMusic::class.java))
         updateUserInfo()
         checkCoinsState()
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (!isFinishing) {
-            startService(Intent(this, BackgroundMusic::class.java))
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        tensionSound.release()
+        victorySound.release()
+        lossSound.release()
     }
+
 
     @SuppressLint("SetTextI18n")
     private fun updateUserInfo() {
@@ -322,7 +344,16 @@ class SinglePlayer : ComponentActivity() {
         }
 
         if (profits > 0){
+            victorySound.start()
             Toast.makeText(this, "Enhorabuena! Has ganado $profits monedas!", Toast.LENGTH_LONG).show()
+            victorySound.setOnCompletionListener {
+                sendMusicControlIntent("PLAY")
+            }
+        } else {
+            lossSound.start()
+            lossSound.setOnCompletionListener {
+                sendMusicControlIntent("PLAY")
+            }
         }
 
         userCoins += profits
@@ -342,6 +373,13 @@ class SinglePlayer : ComponentActivity() {
         val dbHelper = DatabaseHelper(this)
         dbHelper.updateUserCoins(username, newCoins)
 
+    }
+
+    private fun sendMusicControlIntent(action: String) {
+        Intent(this, BackgroundMusic::class.java).also { intent ->
+            intent.action = action
+            startService(intent)
+        }
     }
 
 

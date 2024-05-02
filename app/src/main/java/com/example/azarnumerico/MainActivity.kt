@@ -40,7 +40,6 @@ class MainActivity : ComponentActivity() {
         val scoreButton = findViewById<Button>(R.id.scoreButton)
         val configButton = findViewById<Button>(R.id.configButton)
 
-        startService(Intent(this, BackgroundMusic::class.java))
 
         reBuyButton.isEnabled = false
 
@@ -126,11 +125,14 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onResume() {
         super.onResume()
-        val filter = IntentFilter("MUSIC_STATE_CHANGED")
-        registerReceiver(musicStateReceiver, filter, RECEIVER_NOT_EXPORTED)
-        if (SoundPreferences.isSoundOn(this)) {
+        registerReceiver(musicStateReceiver, IntentFilter("MUSIC_STATE_CHANGED"), RECEIVER_NOT_EXPORTED)
+
+        val shouldPlayMusic = SoundPreferences.isSoundOn(this)
+        val isMusicServiceRunning = BackgroundMusic.isRunning
+
+        if (shouldPlayMusic && !isMusicServiceRunning) {
             startService(Intent(this, BackgroundMusic::class.java))
-        } else {
+        } else if (!shouldPlayMusic && isMusicServiceRunning) {
             stopService(Intent(this, BackgroundMusic::class.java))
         }
         updateLoginButton()
@@ -141,6 +143,14 @@ class MainActivity : ComponentActivity() {
         super.onPause()
         unregisterReceiver(musicStateReceiver)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (BackgroundMusic.isRunning) {
+            stopService(Intent(this, BackgroundMusic::class.java))
+        }
+    }
+
 
     private fun updateLoginButton() {
 

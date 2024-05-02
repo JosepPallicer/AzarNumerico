@@ -39,7 +39,11 @@ class UserViewActivity : ComponentActivity() {
                     userAdapter = UserAdapter(users.toMutableList())
                     usersView.adapter = userAdapter
                 }, { error ->
-                    Toast.makeText(this, "Error al obtener los usuarios: ${error.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        "Error al obtener los usuarios: ${error.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 })
         )
 
@@ -48,6 +52,7 @@ class UserViewActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+
     }
 
 }

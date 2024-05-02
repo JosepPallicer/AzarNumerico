@@ -43,7 +43,8 @@ class RegisterActivity : ComponentActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
 
-                        Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT)
+                            .show()
 
 
                         val intent = Intent(this, MainActivity::class.java)
@@ -51,10 +52,18 @@ class RegisterActivity : ComponentActivity() {
                         finish()
                     }, { error ->
 
-                        Toast.makeText(this, error.message ?: "Error al registrar el usuario.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            error.message ?: "Error al registrar el usuario.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }).let { compositeDisposable.add(it) }
             } else {
-                Toast.makeText(this, "Por favor ingresa un usuario y una contraseña correctos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Por favor ingresa un usuario y una contraseña correctos",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -64,33 +73,35 @@ class RegisterActivity : ComponentActivity() {
     override fun onDestroy() {
         compositeDisposable.clear()
         super.onDestroy()
+
     }
 
     private fun addUser(username: String, password: String): Completable {
 
         return Completable.create { emitter ->
 
-        val values = ContentValues().apply {
+            val values = ContentValues().apply {
 
-            put("name", username)
-            put("password", password)
-            put("coins", 100)
+                put("name", username)
+                put("password", password)
+                put("coins", 100)
+
+            }
+
+            val newRowId = dbHelper.writableDatabase.insert("users", null, values)
+
+            if (newRowId == -1L) {
+
+                emitter.onError(Exception("Error al registrar el usuario"))
+
+            } else {
+
+                emitter.onComplete()
+
+            }
 
         }
 
-        val newRowId = dbHelper.writableDatabase.insert("users", null, values)
-
-        if (newRowId == -1L) {
-
-           emitter.onError(Exception("Error al registrar el usuario"))
-
-        } else {
-
-            emitter.onComplete()
-
-        }
 
     }
-
-
-}}
+}

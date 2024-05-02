@@ -13,7 +13,6 @@ import openHelper.DatabaseHelper
 import android.content.Intent
 import com.example.azarnumerico.adapters.BackgroundMusic
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import model.User
 
 class LogInActivity : ComponentActivity() {
 
@@ -76,6 +75,7 @@ class LogInActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+
     }
 
 }

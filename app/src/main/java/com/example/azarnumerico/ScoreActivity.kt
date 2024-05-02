@@ -44,12 +44,18 @@ class ScoreActivity : ComponentActivity() {
             .subscribe({ users ->
                 scoreAdapter.updateData(users.toMutableList())
             }, { error ->
-                Toast.makeText(this, "Error al cargar los usuarios: ${error.localizedMessage}", Toast.LENGTH_LONG).show()
-            }))
+                Toast.makeText(
+                    this,
+                    "Error al cargar los usuarios: ${error.localizedMessage}",
+                    Toast.LENGTH_LONG
+                ).show()
+            })
+        )
     }
 
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+
     }
 }
