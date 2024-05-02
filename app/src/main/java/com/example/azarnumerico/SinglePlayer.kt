@@ -179,48 +179,45 @@ class SinglePlayer : ComponentActivity() {
 
     }
 
-    @SuppressLint("SetTextI18n")
     private fun startGame() {
+        if (!timerRunning) {
+            startGameButton.text = "STOP"
+            timerRunning = true
+            enableBetButtons(true)
+            sendMusicControlIntent("PAUSE")
+            tensionSound.start()
+            tensionSound.setOnCompletionListener {
+                if (!timerRunning) {
+                    sendMusicControlIntent("PLAY")
+                }
+            }
 
-        startGameButton.text = "STOP"
-        timerRunning = true
-        enableBetButtons(true)
-        sendMusicControlIntent("PAUSE")
-        tensionSound.start()
-        tensionSound.setOnCompletionListener {
-            sendMusicControlIntent("PLAY")
+            countDownTimer = object : CountDownTimer(20000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    betClock.text = (millisUntilFinished / 1000).toString()
+                }
+
+                override fun onFinish() {
+                    runOnUiThread {
+                        val randomNum = (1..99).random()
+                        numGenerated.text = randomNum.toString()
+                        handleResult(randomNum)
+                        resetTimer()
+                    }
+                }
+            }.start()
+        } else {
+            stopTimer()
         }
-
-
-        countDownTimer = object : CountDownTimer(20000, 1000) {
-
-            override fun onTick(millisUntilFinished: Long) {
-
-                betClock.text = (millisUntilFinished / 1000).toString()
-
-            }
-
-            override fun onFinish() {
-
-                val randomNum = (1..99).random()
-
-
-                numGenerated.text = randomNum.toString()
-
-                handleResult(randomNum)
-
-                resetTimer()
-            }
-
-        }.start()
-
     }
 
     private fun stopTimer() {
-        countDownTimer?.cancel()
-        startGameButton.text = "START"
         timerRunning = false
-        betClock.text = "0"
+        countDownTimer?.cancel()
+        tensionSound.stop()
+        tensionSound.prepare()
+        sendMusicControlIntent("PLAY")
+        startGameButton.text = "START"
         enableBetButtons(false)
 
         updateAllCoins(userCoins)
