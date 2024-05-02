@@ -2,12 +2,15 @@ package com.example.azarnumerico
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.azarnumerico.adapters.BackgroundMusic
+import com.example.azarnumerico.adapters.MusicUtil
 import com.example.azarnumerico.adapters.UserAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -54,5 +57,26 @@ class UserViewActivity : ComponentActivity() {
         compositeDisposable.clear()
 
     }
+    override fun onPause() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (MusicUtil.isAppInBackground(this)) {
+                sendMusicControlIntent("STOP")
+            }
+        }, 250)
+        super.onPause()
+    }
+
+    override fun onResume(){
+        sendMusicControlIntent("START")
+        super.onResume()
+    }
+
+    private fun sendMusicControlIntent(action: String) {
+        Intent(this, BackgroundMusic::class.java).also { intent ->
+            intent.action = action
+            startService(intent)
+        }
+    }
+
 
 }

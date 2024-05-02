@@ -11,7 +11,10 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import openHelper.DatabaseHelper
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import com.example.azarnumerico.adapters.BackgroundMusic
+import com.example.azarnumerico.adapters.MusicUtil
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class LogInActivity : ComponentActivity() {
@@ -74,8 +77,30 @@ class LogInActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        sendMusicControlIntent("STOP")
         compositeDisposable.clear()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        sendMusicControlIntent("START")
+    }
+
+
+    override fun onPause() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (MusicUtil.isAppInBackground(this)) {
+                sendMusicControlIntent("STOP")
+            }
+        }, 250)
+        super.onPause()
+    }
+
+    private fun sendMusicControlIntent(action: String) {
+        Intent(this, BackgroundMusic::class.java).also { intent ->
+            intent.action = action
+            startService(intent)
+        }
     }
 
 }

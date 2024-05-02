@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +16,7 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import openHelper.DatabaseHelper
 import com.example.azarnumerico.adapters.BackgroundMusic
+import com.example.azarnumerico.adapters.MusicUtil
 import com.example.azarnumerico.adapters.SoundPreferences
 
 class MainActivity : ComponentActivity() {
@@ -141,6 +144,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (MusicUtil.isAppInBackground(this)) {
+                sendMusicControlIntent("STOP")
+            }
+        }, 250)
         unregisterReceiver(musicStateReceiver)
     }
 
@@ -201,6 +209,13 @@ class MainActivity : ComponentActivity() {
 
         Toast.makeText(this, "Monedas recompradas con éxito", Toast.LENGTH_SHORT).show()
 
+    }
+
+    private fun sendMusicControlIntent(action: String) {
+        Intent(this, BackgroundMusic::class.java).also { intent ->
+            intent.action = action
+            startService(intent)
+        }
     }
 
 }
