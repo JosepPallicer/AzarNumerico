@@ -14,7 +14,7 @@ class HelpActivity : ComponentActivity() {
         setContentView(R.layout.activity_help)
 
         webView = findViewById(R.id.helpWebView)
-        webView.loadUrl("https://www.google.com")
+        webView.loadUrl("https://www.uoc.edu/es")
 
     }
 }

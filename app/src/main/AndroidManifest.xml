@@ -6,6 +6,8 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -19,9 +21,6 @@
         tools:targetApi="31">
         <activity
             android:name=".LanguageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LenguageActivity"
             android:exported="false" />
         <activity
             android:name=".HelpActivity"
