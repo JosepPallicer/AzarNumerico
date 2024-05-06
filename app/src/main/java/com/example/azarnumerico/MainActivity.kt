@@ -192,7 +192,7 @@ class MainActivity : ComponentActivity() {
             userView.text = userInfo.first
             coinsView.text = "${userInfo.second}"
         } ?: run {
-            userView.text = "Inicia Sesión"
+            userView.text = getString(R.string.logInSessionUI)
             coinsView.text = "0"
         }
     }
@@ -207,7 +207,7 @@ class MainActivity : ComponentActivity() {
 
         Utility.UserSession.updateUserCoins(this, 100)
 
-        Toast.makeText(this, "Monedas recompradas con éxito", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.coinsAdvice), Toast.LENGTH_SHORT).show()
 
     }
 

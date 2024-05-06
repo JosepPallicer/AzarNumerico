@@ -18,6 +18,7 @@ class ConfigActivity : ComponentActivity() {
     private lateinit var muteButton: Button
     private lateinit var musicSelectButton: Button
     private lateinit var helpButton: Button
+    private lateinit var languageButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,14 @@ class ConfigActivity : ComponentActivity() {
             val startHelpActivity = Intent(this, HelpActivity::class.java)
             startActivity(startHelpActivity)
             sendMusicControlIntent("STOP")
+
+        }
+
+        languageButton = findViewById(R.id.languageButton)
+        languageButton.setOnClickListener {
+
+            val startLanguageActivity = Intent (this, LanguageActivity::class.java)
+            startActivity(startLanguageActivity)
 
         }
 

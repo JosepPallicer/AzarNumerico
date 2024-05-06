@@ -25,10 +25,20 @@
         android:text="@string/musicSelect" />
 
     <Button
+        android:id="@+id/languageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:text="@string/lenguage"
+        android:textSize="20sp" />
+
+    <Button
         android:id="@+id/helpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="300dp"
         android:text="@string/help" />
+
 </LinearLayout>

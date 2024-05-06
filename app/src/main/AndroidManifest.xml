@@ -18,6 +18,12 @@
         android:theme="@style/Theme.AzarNumerico"
         tools:targetApi="31">
         <activity
+            android:name=".LanguageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LenguageActivity"
+            android:exported="false" />
+        <activity
             android:name=".HelpActivity"
             android:exported="false"
             android:theme="@style/Theme.AzarNumerico" />

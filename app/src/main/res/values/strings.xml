@@ -78,4 +78,12 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="help">Ayuda</string>
+    <string name="lenguage">Idioma</string>
+    <string name="coinsAdvice">Monedas recompradas con éxito</string>
+    <string name="logInSessionUI">Inicia Sesión</string>
+    <string name="spanishSelect">Español</string>
+    <string name="englishSelect">Ingles</string>
+    <string name="portugueseSelect">Portugues</string>
+    <string name="italianSelect">Italiano</string>
+    <string name="frenchSelect">Frances</string>
 </resources>
