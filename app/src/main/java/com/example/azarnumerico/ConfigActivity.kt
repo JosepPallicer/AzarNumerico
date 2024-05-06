@@ -75,6 +75,7 @@ class ConfigActivity : ComponentActivity() {
 
     private fun playMusicFromUri(uri: Uri) {
         val intent = Intent(this, BackgroundMusic::class.java).apply {
+            action = "LOAD"
             putExtra("EXTRA_MUSIC_URI", uri.toString())
         }
         startService(intent)
