@@ -18,6 +18,7 @@ import openHelper.DatabaseHelper
 import com.example.azarnumerico.adapters.BackgroundMusic
 import com.example.azarnumerico.adapters.MusicUtil
 import com.example.azarnumerico.adapters.SoundPreferences
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
 
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
         val scoreButton = findViewById<Button>(R.id.scoreButton)
         val configButton = findViewById<Button>(R.id.configButton)
 
+        FirebaseApp.initializeApp(this)
 
         reBuyButton.isEnabled = false
 
@@ -217,5 +219,6 @@ class MainActivity : ComponentActivity() {
             startService(intent)
         }
     }
+
 
 }

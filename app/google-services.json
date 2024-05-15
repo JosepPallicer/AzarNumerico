@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "690112336400",
+    "project_id": "azar-numerico",
+    "storage_bucket": "azar-numerico.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690112336400:android:7a028ac7d4f2512e7d3095",
+        "android_client_info": {
+          "package_name": "com.example.azarnumerico"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690112336400-ts42let18aofpg7vafc0rqihu6td883u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOLiig0y3WcsNJvSPOD01D-JII0NhgS4A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690112336400-ts42let18aofpg7vafc0rqihu6td883u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

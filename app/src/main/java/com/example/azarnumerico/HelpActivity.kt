@@ -5,6 +5,7 @@ import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 
+
 class HelpActivity : ComponentActivity() {
 
     private lateinit var webView: WebView

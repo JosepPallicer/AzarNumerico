@@ -48,7 +48,14 @@
         android:layout_gravity="center"
         android:width="200dp"
         android:height="60dp"
-        android:text="Log in" />
+        android:text="@string/log_inButton" />
+
+    <Button
+        android:id="@+id/googleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/googleButton" />
 
 
 </LinearLayout>

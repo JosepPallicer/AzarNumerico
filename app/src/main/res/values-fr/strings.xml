@@ -49,4 +49,6 @@
     <string name="portugueseSelect">Portugues</string>
     <string name="italianSelect">Italiano</string>
     <string name="frenchSelect">Frances</string>
+    <string name="log_inButton">Log in</string>
+    <string name="googleButton">Google Log In</string>
 </resources>
