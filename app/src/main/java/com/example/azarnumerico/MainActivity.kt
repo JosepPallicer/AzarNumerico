@@ -18,7 +18,11 @@ import openHelper.DatabaseHelper
 import com.example.azarnumerico.adapters.BackgroundMusic
 import com.example.azarnumerico.adapters.MusicUtil
 import com.example.azarnumerico.adapters.SoundPreferences
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
 
@@ -31,6 +35,9 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +53,12 @@ class MainActivity : ComponentActivity() {
 
         FirebaseApp.initializeApp(this)
 
+        googleSignInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN)
+        auth = FirebaseAuth.getInstance()
+
         reBuyButton.isEnabled = false
 
-        if (Utility.UserSession.isLoggedIn(this)) {
+        if (Utility.UserSession.isLoggedIn(this) || GoogleSignIn.getLastSignedInAccount(this) != null || auth.currentUser != null) {
             reBuyButton.isEnabled = true
         }
 
@@ -166,10 +176,10 @@ class MainActivity : ComponentActivity() {
 
         val reBuyButton = findViewById<Button>(R.id.rebuyButton)
         val buttonLogIn = findViewById<Button>(R.id.logInButton)
-        if (Utility.UserSession.isLoggedIn(this)) {
+        if (Utility.UserSession.isLoggedIn(this) || GoogleSignIn.getLastSignedInAccount(this) != null || auth.currentUser != null) {
             buttonLogIn.text = getString(R.string.logout)
             buttonLogIn.setOnClickListener {
-                Utility.UserSession.logOut(this)
+                logOutUser()
                 reBuyButton.isEnabled = false
                 updateLoginButton()
                 updateUserInfo()
@@ -194,11 +204,23 @@ class MainActivity : ComponentActivity() {
             userView.text = userInfo.first
             coinsView.text = "${userInfo.second}"
         } ?: run {
-            userView.text = getString(R.string.logInSessionUI)
-            coinsView.text = "0"
+            val googleAccount = GoogleSignIn.getLastSignedInAccount(this)
+            if (googleAccount != null) {
+                userView.text = googleAccount.displayName
+                coinsView.text = "0"  // Puedes actualizar esto con la lógica adecuada para las monedas
+            } else {
+                val firebaseUser = FirebaseAuth.getInstance().currentUser
+                if (firebaseUser != null) {
+                    userView.text = firebaseUser.displayName ?: firebaseUser.email
+                    coinsView.text = "0"  // Puedes actualizar esto con la lógica adecuada para las monedas
+                } else {
+
+                    userView.text = getString(R.string.logInSessionUI)
+                    coinsView.text = "0"
+                }
+            }
         }
     }
-
 
     private fun updateReBuy() {
 
@@ -220,5 +242,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun logOutUser() {
+
+        googleSignInClient.signOut().addOnCompleteListener(this) {
+            if (it.isSuccessful){
+                Toast.makeText(this, "Sesión Cerrada", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Error al cerrar sesión", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        FirebaseAuth.getInstance().signOut()
+        Utility.UserSession.logOut(this)
+
+    }
 
 }

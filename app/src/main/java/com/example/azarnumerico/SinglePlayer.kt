@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import com.example.azarnumerico.adapters.BackgroundMusic
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.auth.FirebaseAuth
 import openHelper.DatabaseHelper
 
 class SinglePlayer : ComponentActivity() {
@@ -261,25 +263,36 @@ class SinglePlayer : ComponentActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun updateUserInfo() {
-
         val userView = findViewById<TextView>(R.id.userName)
         val coinsView = findViewById<TextView>(R.id.coinsView)
 
         Utility.UserSession.getUserInfo(this)?.let { userInfo ->
-
             userView.text = userInfo.first
             userCoins = userInfo.second
             coinsView.text = "$userCoins"
-
         } ?: run {
-            userView.text = "Inicia Sesión"
-            userCoins = 0
-            coinsView.text = "0"
+            val googleAccount = GoogleSignIn.getLastSignedInAccount(this)
+            if (googleAccount != null) {
+                userView.text = googleAccount.displayName
+                userCoins = 0 // Actualiza esto con la lógica adecuada para las monedas
+                coinsView.text = "$userCoins"
+            } else {
+                val firebaseUser = FirebaseAuth.getInstance().currentUser
+                if (firebaseUser != null) {
+                    userView.text = firebaseUser.displayName ?: firebaseUser.email
+                    userCoins = 0 // Actualiza esto con la lógica adecuada para las monedas
+                    coinsView.text = "$userCoins"
+                } else {
+                    userView.text = getString(R.string.logInSessionUI)
+                    userCoins = 0
+                    coinsView.text = "0"
+                }
+            }
         }
 
         checkCoinsState()
-
     }
+
 
     private fun updateCoinsUI() {
 
