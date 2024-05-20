@@ -251,6 +251,7 @@ class SinglePlayer : ComponentActivity() {
         super.onResume()
         updateUserInfo()
         checkCoinsState()
+
     }
 
     override fun onDestroy() {
