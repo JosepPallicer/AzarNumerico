@@ -2,6 +2,7 @@
 agp = "8.3.0"
 firebaseAuth = "23.0.0"
 firebaseBom = "33.0.0"
+firebaseFirestore = "25.0.0"
 googleServices = "4.4.1"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
@@ -34,6 +35,8 @@ androidx-localbroadcastmanager = { module = "androidx.localbroadcastmanager:loca
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestore" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

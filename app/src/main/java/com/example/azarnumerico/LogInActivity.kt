@@ -22,10 +22,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class LogInActivity : ComponentActivity() {
@@ -35,6 +35,8 @@ class LogInActivity : ComponentActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,9 @@ class LogInActivity : ComponentActivity() {
         setContentView(R.layout.activity_log_in)
 
         startService(Intent(this, BackgroundMusic::class.java))
+
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         dbHelper = DatabaseHelper(this)
 
@@ -88,7 +93,6 @@ class LogInActivity : ComponentActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, googleSignIn)
 
-        auth = FirebaseAuth.getInstance()
 
         findViewById<Button>(R.id.googleButton).setOnClickListener {
             signIn()
@@ -151,6 +155,7 @@ class LogInActivity : ComponentActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
+                    saveUserToFirestore(user)
                     updateUI(user)
                 } else {
                     Log.w("LogInActivity", "signInWithCredential:failure", task.exception)
@@ -167,6 +172,24 @@ class LogInActivity : ComponentActivity() {
             finish()
         } else {
             Toast.makeText(this, "Falló el inicio de sesión", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun saveUserToFirestore(user: FirebaseUser?) {
+        user?.let {
+            val userRef = firestore.collection("users").document(it.uid)
+            val userData = hashMapOf(
+                "name" to it.displayName,
+                "email" to it.email,
+                "coins" to 100
+            )
+            userRef.set(userData)
+                .addOnSuccessListener {
+                    Log.d("LogInActivity", "User successfully saved in Firestore")
+                }
+                .addOnFailureListener { e ->
+                    Log.w("LogInActivity", "Error saving user", e)
+                }
         }
     }
 

@@ -77,6 +77,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     //noinspection UseTomlInstead
     implementation("com.google.firebase:firebase-analytics")
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.firestore.ktx)
     implementation (libs.firebase.auth)
     implementation (libs.play.services.auth)
     testImplementation(libs.junit)

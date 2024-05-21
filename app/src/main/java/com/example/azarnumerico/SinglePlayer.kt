@@ -251,7 +251,6 @@ class SinglePlayer : ComponentActivity() {
         super.onResume()
         updateUserInfo()
         checkCoinsState()
-
     }
 
     override fun onDestroy() {
@@ -272,23 +271,9 @@ class SinglePlayer : ComponentActivity() {
             userCoins = userInfo.second
             coinsView.text = "$userCoins"
         } ?: run {
-            val googleAccount = GoogleSignIn.getLastSignedInAccount(this)
-            if (googleAccount != null) {
-                userView.text = googleAccount.displayName
-                userCoins = 0 // Actualiza esto con la lógica adecuada para las monedas
-                coinsView.text = "$userCoins"
-            } else {
-                val firebaseUser = FirebaseAuth.getInstance().currentUser
-                if (firebaseUser != null) {
-                    userView.text = firebaseUser.displayName ?: firebaseUser.email
-                    userCoins = 0 // Actualiza esto con la lógica adecuada para las monedas
-                    coinsView.text = "$userCoins"
-                } else {
-                    userView.text = getString(R.string.logInSessionUI)
-                    userCoins = 0
-                    coinsView.text = "0"
-                }
-            }
+            userView.text = getString(R.string.logInSessionUI)
+            userCoins = 0
+            coinsView.text = "0"
         }
 
         checkCoinsState()

@@ -23,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : ComponentActivity() {
 
@@ -38,6 +39,9 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+
+    private var userCoins: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +59,7 @@ class MainActivity : ComponentActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN)
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         reBuyButton.isEnabled = false
 
@@ -202,22 +207,48 @@ class MainActivity : ComponentActivity() {
 
         Utility.UserSession.getUserInfo(this)?.let { userInfo ->
             userView.text = userInfo.first
-            coinsView.text = "${userInfo.second}"
+
+            // Obtener monedas desde Firestore
+            val userRef = firestore.collection("users").document(auth.currentUser?.uid ?: "")
+            userRef.get().addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val coins = document.getLong("coins")?.toInt() ?: 0
+                    userCoins = coins
+                    coinsView.text = "$userCoins"
+                } else {
+                    coinsView.text = "0"
+                    userCoins = 0
+                }
+            }.addOnFailureListener {
+                coinsView.text = "0"
+                userCoins = 0
+                Toast.makeText(this, "Error al obtener monedas", Toast.LENGTH_SHORT).show()
+            }
         } ?: run {
             val googleAccount = GoogleSignIn.getLastSignedInAccount(this)
             if (googleAccount != null) {
                 userView.text = googleAccount.displayName
-                coinsView.text = "0"  // Puedes actualizar esto con la lógica adecuada para las monedas
-            } else {
-                val firebaseUser = FirebaseAuth.getInstance().currentUser
-                if (firebaseUser != null) {
-                    userView.text = firebaseUser.displayName ?: firebaseUser.email
-                    coinsView.text = "0"  // Puedes actualizar esto con la lógica adecuada para las monedas
-                } else {
 
-                    userView.text = getString(R.string.logInSessionUI)
+                // Obtener monedas desde Firestore para la cuenta de Google
+                val userRef = firestore.collection("users").document(auth.currentUser?.uid ?: "")
+                userRef.get().addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val coins = document.getLong("coins")?.toInt() ?: 0
+                        userCoins = coins
+                        coinsView.text = "$userCoins"
+                    } else {
+                        coinsView.text = "0"
+                        userCoins = 0
+                    }
+                }.addOnFailureListener {
                     coinsView.text = "0"
+                    userCoins = 0
+                    Toast.makeText(this, "Error al obtener monedas", Toast.LENGTH_SHORT).show()
                 }
+            } else {
+                userView.text = getString(R.string.logInSessionUI)
+                userCoins = 0
+                coinsView.text = "0"
             }
         }
     }
