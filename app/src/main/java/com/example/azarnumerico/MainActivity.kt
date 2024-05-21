@@ -161,12 +161,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
+        unregisterReceiver(musicStateReceiver)
         Handler(Looper.getMainLooper()).postDelayed({
             if (MusicUtil.isAppInBackground(this)) {
                 sendMusicControlIntent("STOP")
             }
         }, 250)
-        unregisterReceiver(musicStateReceiver)
     }
 
     override fun onDestroy() {
@@ -205,51 +205,34 @@ class MainActivity : ComponentActivity() {
         val userView = findViewById<TextView>(R.id.userView)
         val coinsView = findViewById<TextView>(R.id.moneyView)
 
-        Utility.UserSession.getUserInfo(this)?.let { userInfo ->
-            userView.text = userInfo.first
+        val currentUser = auth.currentUser
 
-            // Obtener monedas desde Firestore
-            val userRef = firestore.collection("users").document(auth.currentUser?.uid ?: "")
+        if (currentUser != null) {
+            val uid = currentUser.uid
+            val userRef = firestore.collection("users").document(uid)
+
             userRef.get().addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val coins = document.getLong("coins")?.toInt() ?: 0
+                    val name = document.getString("name") ?: currentUser.displayName
                     userCoins = coins
+                    userView.text = name
                     coinsView.text = "$userCoins"
                 } else {
+                    userView.text = currentUser.displayName ?: getString(R.string.logInSessionUI)
                     coinsView.text = "0"
                     userCoins = 0
                 }
             }.addOnFailureListener {
+                userView.text = currentUser.displayName ?: getString(R.string.logInSessionUI)
                 coinsView.text = "0"
                 userCoins = 0
                 Toast.makeText(this, "Error al obtener monedas", Toast.LENGTH_SHORT).show()
             }
-        } ?: run {
-            val googleAccount = GoogleSignIn.getLastSignedInAccount(this)
-            if (googleAccount != null) {
-                userView.text = googleAccount.displayName
-
-                // Obtener monedas desde Firestore para la cuenta de Google
-                val userRef = firestore.collection("users").document(auth.currentUser?.uid ?: "")
-                userRef.get().addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        val coins = document.getLong("coins")?.toInt() ?: 0
-                        userCoins = coins
-                        coinsView.text = "$userCoins"
-                    } else {
-                        coinsView.text = "0"
-                        userCoins = 0
-                    }
-                }.addOnFailureListener {
-                    coinsView.text = "0"
-                    userCoins = 0
-                    Toast.makeText(this, "Error al obtener monedas", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                userView.text = getString(R.string.logInSessionUI)
-                userCoins = 0
-                coinsView.text = "0"
-            }
+        } else {
+            userView.text = getString(R.string.logInSessionUI)
+            userCoins = 0
+            coinsView.text = "0"
         }
     }
 
