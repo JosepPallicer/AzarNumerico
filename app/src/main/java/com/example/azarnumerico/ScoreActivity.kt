@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +27,14 @@ class ScoreActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_score)
+
+        val rankingButton = findViewById<Button>(R.id.googleRankingButton)
+
+        rankingButton.setOnClickListener {
+
+            val viewRanking = Intent(this, RankingActivity::class.java)
+            startActivity(viewRanking)
+        }
 
         startService(Intent(this, BackgroundMusic::class.java))
 

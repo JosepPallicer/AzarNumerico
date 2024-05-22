@@ -52,5 +52,9 @@
     <string name="log_inButton">Log in</string>
     <string name="googleButton">Google Log In</string>
     <string name="default_web_client_id">690112336400-ts42let18aofpg7vafc0rqihu6td883u.apps.googleusercontent.com</string>
+    <string name="multiplayerUserName">Nombre de usuario</string>
+    <string name="actualMultiplayerCoins">Monedas</string>
+    <string name="jackpot">Bote</string>
+    <string name="ranking_online">Online Ranking</string>
 
 </resources>

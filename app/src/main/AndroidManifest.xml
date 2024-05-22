@@ -20,6 +20,15 @@
         android:theme="@style/Theme.AzarNumerico"
         tools:targetApi="31">
         <activity
+            android:name=".RankingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Multiplayer"
+            android:exported="false" />
+        <activity
+            android:name=".MultiPlayer"
+            android:exported="false" />
+        <activity
             android:name=".LanguageActivity"
             android:exported="false" />
         <activity

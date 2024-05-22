@@ -54,6 +54,8 @@ class MainActivity : ComponentActivity() {
         val reBuyButton = findViewById<Button>(R.id.rebuyButton)
         val scoreButton = findViewById<Button>(R.id.scoreButton)
         val configButton = findViewById<Button>(R.id.configButton)
+        val multiPlayer = findViewById<Button>(R.id.multiPlayerButton)
+
 
         FirebaseApp.initializeApp(this)
 
@@ -138,6 +140,13 @@ class MainActivity : ComponentActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(configuration)
         }
+        multiPlayer.setOnClickListener {
+
+            val startMultiplayer = Intent(this, Multiplayer::class.java)
+
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(startMultiplayer)
+        }
 
     }
 
@@ -210,6 +219,7 @@ class MainActivity : ComponentActivity() {
         if (currentUser != null) {
             val uid = currentUser.uid
             val userRef = firestore.collection("users").document(uid)
+
 
             userRef.get().addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
