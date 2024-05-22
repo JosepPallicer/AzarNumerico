@@ -34,7 +34,7 @@ class RankingActivity : ComponentActivity() {
         val db = FirebaseFirestore.getInstance()
         val usersRef = db.collection("users")
 
-        usersRef.orderBy("coins", Query.Direction.DESCENDING) // Asegúrate de usar "coins" aquí
+        usersRef.orderBy("coins", Query.Direction.DESCENDING)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -47,9 +47,6 @@ class RankingActivity : ComponentActivity() {
                             userList.add(user)
                         }
                         userAdapter.notifyDataSetChanged()
-                        Log.d("RankingActivity", "Total users: ${userList.size}")
-                    } else {
-                        Log.d("RankingActivity", "No users found in Firestore.")
                     }
                 } else {
                     Log.w("RankingActivity", "Error getting documents.", task.exception)
