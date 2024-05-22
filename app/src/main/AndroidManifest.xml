@@ -26,9 +26,6 @@
             android:name=".Multiplayer"
             android:exported="false" />
         <activity
-            android:name=".MultiPlayer"
-            android:exported="false" />
-        <activity
             android:name=".LanguageActivity"
             android:exported="false" />
         <activity
